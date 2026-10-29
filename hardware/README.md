@@ -43,7 +43,7 @@ LiDAR **Pi'den güç almaz**; USB sadece veri taşır.
    | Pi | **5,0–5,2 V** |
    | MP1584EN (LiDAR) | **5,00 V** (4,9–5,2 arası) |
    Şalteri kapat, ayarlı çıkışları yerlerine bağla.
-4. **Pi'yi aç:** Sadece Pi bağlıyken aç, kararlı çalışıyor mu bak. Sonra kurulum ve `bash calistir.sh` ([`../README.md`](../README.md)).
+4. **Pi'yi aç:** Sadece Pi bağlıyken aç, kararlı çalışıyor mu bak. Sonra kurulum ve `arac` ([`../README.md`](../README.md)).
 5. **Motorlar:** Tekerlekler **havada**. Yazılım adımlarını (Adım 2–4) rehberden izle.
 6. **LiDAR:** MP1584EN çıkışını yük altında ölç (**4,9–5,2 V** kalmalı), sonra USB'yi Pi'ye tak.
 7. **Hepsi birlikte:** 10 dakika çalıştır; reset, ısınma veya kablo gevşemesi olmamalı.

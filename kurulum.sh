@@ -4,7 +4,7 @@
 #
 #    sudo apt-get install -y git && git clone https://github.com/atestokhay/autonomous-car.v2.git && bash autonomous-car.v2/kurulum.sh
 #
-#  Kurulum bitince:   sudo reboot      sonra:   bash ~/autonomous-car.v2/calistir.sh
+#  Kurulum bitince:   sudo reboot      sonra terminale sadece şunu yaz:   arac
 # =====================================================================
 # Otonom araç: tek komutla kurulum (Raspberry Pi 5, Ubuntu 24.04).
 #   bash kurulum.sh            -> kurulumu yapar (yaklaşık 20-40 dk, internet gerekir)
@@ -14,8 +14,11 @@
 
 DENEME=0; [ "${1:-}" = "--deneme" ] && DENEME=1
 LOG="$HOME/kurulum_log.txt"
-REPO_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-SOFT="$REPO_DIR/software"
+# Yazılım ayrı depoda; sabit (değişmeyen) sürüme kilitli, böylece herkeste aynı kod çalışır.
+YAZILIM_URL="https://github.com/atestokhay/autonomous-car.git"
+YAZILIM_SURUM="04c5877267363bb2356a4a781b4dcd6259cfe574"
+YAZILIM_DIR="$HOME/arac"
+SOFT="$YAZILIM_DIR/software"
 WS="$HOME/ros2_ws"
 
 
@@ -44,7 +47,6 @@ adim 1/8 "Bilgisayar kontrol ediliyor"
 [ "${VERSION_ID:-}" = "24.04" ] || dur "Ubuntu 24.04 gerekli (bulunan: ${PRETTY_NAME:-bilinmiyor}). SD karta Ubuntu Server 24.04 LTS 64-bit yaz."
 [ "$(uname -m)" = "aarch64" ] || uyari "İşlemci aarch64 değil ($(uname -m)); bu betik Raspberry Pi 5 için hazırlandı."
 [ "$DENEME" = 1 ] || [ "$(id -u)" -ne 0 ] || dur "Betiği root olarak çalıştırma. Normal kullanıcıyla: bash kurulum.sh"
-[ -d "$SOFT" ] || dur "software klasörü bulunamadı ($SOFT). Betiği repo içinden çalıştır."
 if [ "$DENEME" != 1 ]; then
   sudo -v || dur "sudo parolası gerekli."
   ping -c1 -W3 8.8.8.8 >/dev/null 2>&1 || dur "İnternet yok. Wi-Fi/Ethernet bağlantısını kontrol et."
@@ -58,13 +60,19 @@ calistir "güncelleme" sudo DEBIAN_FRONTEND=noninteractive apt-get -y upgrade ||
 tamam "Sistem güncel"
 
 # ---------- 3. Temel paketler ----------
-adim 3/8 "Temel paketler kuruluyor"
+adim 3/8 "Temel paketler ve robot yazılımı kuruluyor"
 calistir "python/gpio/seri paketleri" sudo DEBIAN_FRONTEND=noninteractive apt-get -y install \
   git curl tmux software-properties-common python3-pip python3-yaml python3-serial python3-numpy \
   python3-matplotlib python3-lgpio gpiod || dur "Temel paketler kurulamadı"
 calistir "vcgencmd (isteğe bağlı)" sudo DEBIAN_FRONTEND=noninteractive apt-get -y install libraspberrypi-bin \
   || uyari "vcgencmd kurulamadı (güç kontrolü komutu çalışmayabilir, kurulum devam ediyor)"
-tamam "Temel paketler tamam"
+if [ -d "$YAZILIM_DIR/.git" ]; then
+  tamam "Robot yazılımı zaten indirilmiş"
+else
+  calistir "robot yazılımı indiriliyor" git clone "$YAZILIM_URL" "$YAZILIM_DIR" || dur "Robot yazılımı indirilemedi (internet/GitHub?)"
+fi
+calistir "sabit sürüme geçiliyor" git -C "$YAZILIM_DIR" checkout -q "$YAZILIM_SURUM" || dur "Sabit sürüme geçilemedi"
+tamam "Temel paketler ve robot yazılımı tamam"
 
 # ---------- 4. GPIO ve seri port izinleri ----------
 adim 4/8 "GPIO ve LiDAR portu izinleri ayarlanıyor"
@@ -122,6 +130,10 @@ ekle() { grep -qxF "$1" "$HOME/.bashrc" 2>/dev/null || { [ "$DENEME" = 1 ] || ec
 ekle "source /opt/ros/jazzy/setup.bash"
 ekle "source $WS/install/setup.bash"
 ekle "export ROS_DOMAIN_ID=7"
+if [ "$DENEME" != 1 ]; then
+  printf '#!/usr/bin/env bash\nexec python3 %s/calistir.py "$@"\n' "$SOFT" | sudo tee /usr/local/bin/arac >/dev/null \
+    && sudo chmod +x /usr/local/bin/arac || dur "arac komutu oluşturulamadı"
+fi
 tamam ".bashrc güncellendi"
 
 # ---------- 8. Test ----------
@@ -137,11 +149,11 @@ fi
 renk 32 "KURULUM TAMAMLANDI ✓"
 cat <<'MSG'
 
-Sıradaki adımlar:
+SIRADAKİ ADIMLAR:
   1) Pi'yi yeniden başlat (izinlerin etkili olması için ŞART):   sudo reboot
-  2) Yeniden bağlanınca şunu çalıştır (robotu adım adım hazırlar):
+  2) Yeniden bağlanınca terminale sadece şunu yaz (robotu adım adım hazırlar):
 
-         bash ~/autonomous-car.v2/calistir.sh
+         arac
 
      (Tekerlekleri havaya alıp elini güç şalterine koy; program sana her adımda ne yapacağını söyler.)
 MSG

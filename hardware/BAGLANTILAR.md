@@ -1,7 +1,7 @@
 # Hangi kablo nereye?
 
 BCM = yazılımdaki numara, Pin = Pi üzerindeki fiziksel pin sırası (40 pinli başlık). Kabloları **Pin** sütununa göre tak.
-Bu tablo `software/config/pins.yaml` ile birebir aynıdır. Biri değişirse ikisi de değişmeli.
+Bu tablo `~/arac/software/config/pins.yaml` ile birebir aynıdır. Biri değişirse ikisi de değişmeli.
 
 ## Sol motor (Sol L298N)
 | L298N | Pi (BCM) | Pi (Pin) |

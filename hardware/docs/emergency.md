@@ -75,11 +75,11 @@ Güç kesildikten sonra, **tekerlekler havada**, şu sırayla bak:
 # BÖLÜM B — "ÇALIŞMIYOR": SIRALI KONTROL
 
 Her bölümün sonunda **"Geçti"** koşulu var. Geçmeden bir sonrakine gitme.
-Komutlar `software/` klasöründedir: `cd ~/autonomous-car.v2/software`.
+Komutlar `software/` klasöründedir: `cd ~/arac/software`.
 
 ## B0. Hemen yap: teşhis raporu al (motor hareket etmez)
 ```bash
-cd ~/autonomous-car.v2/software
+cd ~/arac/software
 python3 tools/diag.py
 ```
 `diag_rapor.txt` oluşur. Sorunu anlatmadan önce bunu al; çoğu sorunu tek bakışta gösterir.
@@ -109,7 +109,7 @@ Aşağıdaki adımlarda bu rapordaki satırlara atıf yapılır.
 python3 --version                  # 3.12 civarı
 python3 -m unittest discover -s tests     # OK olmalı
 ```
-- `ModuleNotFoundError` → `software/notes/kurulum-ubuntu-ros.md` §2'yi tekrar çalıştır (`yaml`, `numpy`, `serial`, `lgpio`).
+- `ModuleNotFoundError` → `~/arac/software/notes/kurulum-ubuntu-ros.md` §2'yi tekrar çalıştır (`yaml`, `numpy`, `serial`, `lgpio`).
 - Testler `FAIL` → hata satırını gönder. **Robota bağlı bir şey denenmez.**
 - ROS komutu yok → `source /opt/ros/jazzy/setup.bash` (ve `source ~/ros2_ws/install/setup.bash`).
 
@@ -121,7 +121,7 @@ gpiodetect                          # pinctrl-rp1 görünmeli
 ls -l /dev/gpiochip*                # grup gpio, mod crw-rw----
 id                                  # gpio ve dialout grubunda mısın
 ```
-- `Permission denied` → `software/notes/kurulum-ubuntu-ros.md` §2 (udev kuralı + grup), **çıkış yapıp gir**.
+- `Permission denied` → `~/arac/software/notes/kurulum-ubuntu-ros.md` §2 (udev kuralı + grup), **çıkış yapıp gir**.
 - `gpiodetect` yok → `sudo apt install gpiod`.
 - `lgpio` import hatası → `sudo apt install python3-lgpio`.
 - Başka bir program GPIO'yu tutuyor olabilir: `python3` süreçleri kapat (`pkill -f stages/`), `sudo reboot`.
@@ -193,7 +193,7 @@ id                                  # gpio ve dialout grubunda mısın
 ## B10. Duvar takibi (aşama 7)
 Önce robotsuz: `python3 stages/07-duvar-takibi/sim_demo.py --world oda --side right` → "ÇARPMA YOK".
 Robotla bozuksa sırayla: LiDAR yönü (B8) → PID (B7) → odometri (B9) → `v_scale` 0,3 ile tekrar →
-`software/notes/sorun-giderme.md` aşama 7 tablosu. Hemen ESTOP oluyorsa `robot_radius_m` ve LiDAR'ın kendi gövdesini görüp görmediğine bak.
+`~/arac/software/notes/sorun-giderme.md` aşama 7 tablosu. Hemen ESTOP oluyorsa `robot_radius_m` ve LiDAR'ın kendi gövdesini görüp görmediğine bak.
 
 ## B11. "Donanım mı yazılım mı?" ayırma testi
 | Test | Sonuç | Anlamı |
@@ -215,4 +215,4 @@ Yazılım testleri geçip donanım testleri geçmiyorsa **sorun donanım/kabloda
 ## B13. Geri alma (hiçbir şey çalışmıyorsa)
 - Kendi ayarlarını sıfırla: `rm config/tuned.yaml config/robot_cal.yaml` (varsayılana döner), sonra aşama 4 ve 6'yı yeniden yap.
 - Kodu temiz kopyala: `git status` ile neyi değiştirdiğine bak; `git stash` ile sakla, `git pull`.
-- Pi'yi sıfırla: yeni SD kartla `software/notes/kurulum-ubuntu-ros.md`.
+- Pi'yi sıfırla: yeni SD kartla `~/arac/software/notes/kurulum-ubuntu-ros.md`.

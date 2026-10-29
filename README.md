@@ -13,10 +13,10 @@ sudo apt-get install -y git && git clone https://github.com/atestokhay/autonomou
 20–40 dk sürer, bitince `KURULUM TAMAMLANDI ✓` yazar. Sonra: `sudo reboot`.
 (Yarım kalırsa aynı komutu tekrar çalıştır. Hata olursa `~/kurulum_log.txt` dosyasını öğretmene gönder.)
 
-**2) Robotu hazırla ve çalıştır** — Pi yeniden açılınca:
+**2) Robotu hazırla ve çalıştır** — Pi yeniden açılınca terminale sadece şunu yaz:
 
 ```bash
-bash ~/autonomous-car.v2/calistir.sh
+arac
 ```
 Program seni **adım adım** götürür (motor, enkoder, hız ayarı, LiDAR, ölçüm, duvar takibi). Her adımda ne yapacağını
 söyler, güvenlik sorar, sonucu kendisi kontrol eder, yönleri kendisi düzeltir. Kapatsan bile kaldığın adımdan devam eder.
@@ -25,12 +25,10 @@ Robot ancak bu programda, güvenlik sorusuna **evet** dedikten sonra hareket ede
 ## Donanımı kurarken
 Önce robotu monte et: [`hardware/README.md`](hardware/README.md). Sorun olursa: [`hardware/docs/emergency.md`](hardware/docs/emergency.md).
 
-## Klasörler
+## Bu depoda ne var?
 ```
-kurulum.sh            tek komutla kurulum
-calistir.sh           robotu rehberli hazırlama ve çalıştırma
-hardware/             montaj, kablo tablosu, ölçüm defteri, acil durum
-software/             kod, ayarlar, aşama README'leri, notes/
+kurulum.sh   tek komutla kurulum (robot yazılımını da kendisi indirir)
+hardware/    montaj, kablo tablosu, ölçüm defteri, acil durum
 ```
 
 ## Güvenlik (kısaca)
