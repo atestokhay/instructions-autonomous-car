@@ -1,11 +1,11 @@
-# Otonom Araç — Öğrenci Kurulumu
+# Otonom Araç — Kurulumu
 
-Raspberry Pi 5 + LiDAR ile **duvar takibi yapan** otonom araç. Kablolamadan robotu çalıştırmaya kadar her şeyi
-**bir program adım adım** gösterir. Senin yapacağın sadece iki şey var.
+Raspberry Pi 5 + LiDAR otonom araç. Kablolama ve robotu çalıştırmaya kadar her şeyi
+adım adım gösteriyor.  Yapacağın sadece iki şey var.
 
 ## ▶ 1) Kurulum
 
-1. SD karta **Ubuntu Server 24.04 LTS (64-bit)** yaz (Raspberry Pi Imager; kullanıcı adı, parola, Wi-Fi ve **SSH**'ı ayarlardan aç).
+1. SD karta **Ubuntu Server 24.04 LTS (64-bit)** yaz, (SD kartta varsa aynen devam) (Raspberry Pi Imager; kullanıcı adı, parola, Wi-Fi ve **SSH**'ı ayarlardan aç).
 2. Pi'yi **kendi şarj adaptöründen** çalıştır, internete bağla, bilgisayardan SSH ile bağlan.
 3. Pi'nin terminaline şu tek satırı yapıştır ve Enter'a bas:
 
