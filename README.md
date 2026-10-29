@@ -10,7 +10,7 @@ adım adım gösteriyor.  Yapacağın sadece iki şey var.
 3. Pi'nin terminaline şu tek satırı yapıştır ve Enter'a bas:
 
 ```bash
-sudo apt-get install -y git && git clone https://github.com/atestokhay/autonomous-car.v2.git && bash autonomous-car.v2/kurulum.sh
+sudo apt-get install -y git && git clone https://github.com/atestokhay/instructions-autonomous-car.git && bash instructions-autonomous-car/kurulum.sh
 ```
 
 20–40 dakika sürer; pencereyi ve interneti kapatma. Bitince `KURULUM TAMAMLANDI ✓` yazar. Sonra:

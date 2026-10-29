@@ -2,7 +2,7 @@
 # =====================================================================
 #  ÖĞRENCİ: SADECE ŞUNU ÇALIŞTIR  (Pi'nin terminalinde, tek satır):
 #
-#    sudo apt-get install -y git && git clone https://github.com/atestokhay/autonomous-car.v2.git && bash autonomous-car.v2/kurulum.sh
+#    sudo apt-get install -y git && git clone https://github.com/atestokhay/instructions-autonomous-car.git && bash instructions-autonomous-car/kurulum.sh
 #
 #  Kurulum bitince:   sudo reboot      sonra terminale sadece şunu yaz:   arac   (kablolamayı da o gösterir)
 # =====================================================================
@@ -54,7 +54,7 @@ if [ "$DENEME" != 1 ]; then
   sudo -v || dur "sudo parolası gerekli."
   ping -c1 -W3 8.8.8.8 >/dev/null 2>&1 || dur "İnternet yok. Wi-Fi/Ethernet bağlantısını kontrol et."
 fi
-tamam "Ubuntu 24.04, internet var"
+[ "$DENEME" = 1 ] && tamam "Ön kontrol (deneme modunda kontroller gevşek)" || tamam "Ubuntu 24.04, internet var"
 
 # ---------- 2. Sistem güncelleme ----------
 adim 2/8 "Sistem paketleri güncelleniyor (uzun sürebilir)"
@@ -149,6 +149,10 @@ if [ "$DENEME" != 1 ]; then
   fi
 fi
 
+if [ "$DENEME" = 1 ]; then
+  renk 33 "DENEME BİTTİ — hiçbir şey kurulmadı, 'arac' komutu oluşturulmadı. (Gerçek kurulum Raspberry Pi'de: --deneme olmadan.)"
+  exit 0
+fi
 renk 32 "KURULUM TAMAMLANDI ✓"
 cat <<'MSG'
 
