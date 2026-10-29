@@ -1,4 +1,11 @@
 #!/usr/bin/env bash
+# =====================================================================
+#  ÖĞRENCİ: SADECE ŞUNU ÇALIŞTIR  (Pi'nin terminalinde, tek satır):
+#
+#    sudo apt-get install -y git && git clone https://github.com/atestokhay/autonomous-car.v2.git && bash autonomous-car.v2/kurulum.sh
+#
+#  Kurulum bitince:   sudo reboot      sonra:   bash ~/autonomous-car.v2/calistir.sh
+# =====================================================================
 # Otonom araç: tek komutla kurulum (Raspberry Pi 5, Ubuntu 24.04).
 #   bash kurulum.sh            -> kurulumu yapar (yaklaşık 20-40 dk, internet gerekir)
 #   bash kurulum.sh --deneme   -> hiçbir şey kurmadan sadece ne yapacağını yazar
@@ -132,7 +139,10 @@ cat <<'MSG'
 
 Sıradaki adımlar:
   1) Pi'yi yeniden başlat (izinlerin etkili olması için ŞART):   sudo reboot
-  2) Yeniden bağlanınca:  cd ~/autonomous-car-v2/software && python3 menu.py
-  3) Rehber:              software/OGRENCI-REHBERI.md  (ADIM 2'den devam et)
+  2) Yeniden bağlanınca şunu çalıştır (robotu adım adım hazırlar):
+
+         bash ~/autonomous-car.v2/calistir.sh
+
+     (Tekerlekleri havaya alıp elini güç şalterine koy; program sana her adımda ne yapacağını söyler.)
 MSG
 echo "Kurulum bitti $(date)" >> "$LOG"

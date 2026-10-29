@@ -1,6 +1,6 @@
 # Kurulum: Ubuntu 24.04 + ROS 2 Jazzy (Raspberry Pi 5)
 
-> **Kolay yol:** Bu sayfadaki her şeyi tek komut yapar: `bash ~/autonomous-car-v2/kurulum.sh`. Aşağıdaki adımlar o betik takılırsa elle yapmak içindir.
+> **Kolay yol:** Bu sayfadaki her şeyi tek komut yapar: `bash ~/autonomous-car.v2/kurulum.sh`. Aşağıdaki adımlar o betik takılırsa elle yapmak içindir.
 
 Her komutu sırayla, hata çıkarsa **durup** hata satırını kaydet. İnternet bağlantısı gerekir.
 
@@ -59,7 +59,7 @@ launch dosyası adına bağlı değildir.) Satır yoksa derleme başarısız olm
 ## 5) Yazılım
 ```bash
 cd ~ && git clone <repo-adresi>
-cd autonomous-car-v2/software
+cd autonomous-car.v2/software
 python3 -m unittest discover -s tests       # OK
 ```
 Ardından `stages/01-...`'den başla.

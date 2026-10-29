@@ -3,29 +3,32 @@
 Raspberry Pi 5 + LiDAR ile **duvar takibi yapan** otonom araç. Donanım ve yazılım, lise öğrencilerinin
 **adım adım, kopyala-yapıştır** ile yapabileceği şekilde hazırlandı.
 
-## 1) Başlamak için tek komut
-SD karta **Ubuntu Server 24.04 LTS (64-bit)** yaz, Pi'yi aç, internete bağla, sonra Pi'nin terminalinde:
+## ▶ ÖĞRENCİ: SADECE BUNLARI ÇALIŞTIR
+
+**1) Kurulum** — SD karta **Ubuntu Server 24.04 LTS (64-bit)** yaz, Pi'yi aç, internete bağla. Pi'nin terminalinde:
 
 ```bash
-sudo apt-get install -y git && git clone https://github.com/atestokhay/autonomous-car-v2.git && bash autonomous-car-v2/kurulum.sh
+sudo apt-get install -y git && git clone https://github.com/atestokhay/autonomous-car.v2.git && bash autonomous-car.v2/kurulum.sh
 ```
+20–40 dk sürer, bitince `KURULUM TAMAMLANDI ✓` yazar. Sonra: `sudo reboot`.
+(Yarım kalırsa aynı komutu tekrar çalıştır. Hata olursa `~/kurulum_log.txt` dosyasını öğretmene gönder.)
 
-20–40 dakika sürer. Bitince `KURULUM TAMAMLANDI ✓` yazar, sonra `sudo reboot`.
-Yarım kalırsa aynı komutu tekrar çalıştır. Hata olursa `~/kurulum_log.txt` dosyasını öğretmene gönder.
+**2) Robotu hazırla ve çalıştır** — Pi yeniden açılınca:
 
-## 2) Yol haritası
-| Sıra | Ne | Nereden |
-|---|---|---|
-| 1 | Donanımı kur ve ölç | [`hardware/README.md`](hardware/README.md) |
-| 2 | Yazılımı adım adım yap | [`OGRENCI-REHBERI.md`](OGRENCI-REHBERI.md) |
-| 3 | Bir şey çalışmıyorsa | [`hardware/docs/emergency.md`](hardware/docs/emergency.md) |
+```bash
+bash ~/autonomous-car.v2/calistir.sh
+```
+Program seni **adım adım** götürür (motor, enkoder, hız ayarı, LiDAR, ölçüm, duvar takibi). Her adımda ne yapacağını
+söyler, güvenlik sorar, sonucu kendisi kontrol eder, yönleri kendisi düzeltir. Kapatsan bile kaldığın adımdan devam eder.
+Robot ancak bu programda, güvenlik sorusuna **evet** dedikten sonra hareket eder. Kurulum robotu hareket ettirmez.
 
-Yazılım adımlarını menüyle çalıştırabilirsin: `cd ~/autonomous-car-v2/software && python3 menu.py`
+## Donanımı kurarken
+Önce robotu monte et: [`hardware/README.md`](hardware/README.md). Sorun olursa: [`hardware/docs/emergency.md`](hardware/docs/emergency.md).
 
 ## Klasörler
 ```
 kurulum.sh            tek komutla kurulum
-OGRENCI-REHBERI.md    öğrencinin ana rehberi (buradan ilerle)
+calistir.sh           robotu rehberli hazırlama ve çalıştırma
 hardware/             montaj, kablo tablosu, ölçüm defteri, acil durum
 software/             kod, ayarlar, aşama README'leri, notes/
 ```

@@ -5,7 +5,7 @@ Bağlantı ve ölçümler: `hardware/` (önce oradaki enerji verme öncesi kontr
 ## Adımlar
 1. Raspberry Pi Imager ile microSD'ye **Ubuntu 24.04 LTS (64-bit)** yaz (ROS 2 Jazzy bu sürüm içindir; sonradan değiştirme).
 2. Kurulum, paketler ve ROS 2 → **`notes/kurulum-ubuntu-ros.md`** (adım adım).
-3. Yazılımı indir: `git clone <repo-adresi> && cd autonomous-car-v2/software`
+3. Yazılımı indir: `git clone <repo-adresi> && cd autonomous-car.v2/software`
 4. Testleri çalıştır: `python3 -m unittest discover -s tests` → `OK`
 5. GPIO çipi: `pins.yaml` içinde `gpiochip: auto` (kendisi bulur). Kontrol: `gpiodetect` çıktısında `pinctrl-rp1` görünmeli.
 
