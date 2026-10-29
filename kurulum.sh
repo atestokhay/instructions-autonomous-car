@@ -44,7 +44,10 @@ renk 35 "OTONOM ARAÇ KURULUMU — bu pencereyi kapatma, internet bağlantısı 
 # ---------- 1. Ön kontroller ----------
 adim 1/8 "Bilgisayar kontrol ediliyor"
 . /etc/os-release 2>/dev/null
-[ "${VERSION_ID:-}" = "24.04" ] || dur "Ubuntu 24.04 gerekli (bulunan: ${PRETTY_NAME:-bilinmiyor}). SD karta Ubuntu Server 24.04 LTS 64-bit yaz."
+if [ "${VERSION_ID:-}" != "24.04" ]; then
+  if [ "$DENEME" = 1 ]; then uyari "Bu bilgisayar Ubuntu 24.04 değil (${PRETTY_NAME:-bilinmiyor}); deneme modunda devam ediliyor."
+  else dur "Ubuntu 24.04 gerekli (bulunan: ${PRETTY_NAME:-bilinmiyor}). SD karta Ubuntu Server 24.04 LTS 64-bit yaz."; fi
+fi
 [ "$(uname -m)" = "aarch64" ] || uyari "İşlemci aarch64 değil ($(uname -m)); bu betik Raspberry Pi 5 için hazırlandı."
 [ "$DENEME" = 1 ] || [ "$(id -u)" -ne 0 ] || dur "Betiği root olarak çalıştırma. Normal kullanıcıyla: bash kurulum.sh"
 if [ "$DENEME" != 1 ]; then
