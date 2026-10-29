@@ -4,7 +4,7 @@
 #
 #    sudo apt-get install -y git && git clone https://github.com/atestokhay/autonomous-car.v2.git && bash autonomous-car.v2/kurulum.sh
 #
-#  Kurulum bitince:   sudo reboot      sonra terminale sadece şunu yaz:   arac
+#  Kurulum bitince:   sudo reboot      sonra terminale sadece şunu yaz:   arac   (kablolamayı da o gösterir)
 # =====================================================================
 # Otonom araç: tek komutla kurulum (Raspberry Pi 5, Ubuntu 24.04).
 #   bash kurulum.sh            -> kurulumu yapar (yaklaşık 20-40 dk, internet gerekir)
@@ -16,7 +16,7 @@ DENEME=0; [ "${1:-}" = "--deneme" ] && DENEME=1
 LOG="$HOME/kurulum_log.txt"
 # Yazılım ayrı depoda; sabit (değişmeyen) sürüme kilitli, böylece herkeste aynı kod çalışır.
 YAZILIM_URL="https://github.com/atestokhay/autonomous-car.git"
-YAZILIM_SURUM="04c5877267363bb2356a4a781b4dcd6259cfe574"
+YAZILIM_SURUM="312037109adfca964e3f90541218b7b200af6a18"
 YAZILIM_DIR="$HOME/arac"
 SOFT="$YAZILIM_DIR/software"
 WS="$HOME/ros2_ws"
@@ -151,9 +151,12 @@ cat <<'MSG'
 
 SIRADAKİ ADIMLAR:
   1) Pi'yi yeniden başlat (izinlerin etkili olması için ŞART):   sudo reboot
-  2) Yeniden bağlanınca terminale sadece şunu yaz (robotu adım adım hazırlar):
+  2) Yeniden bağlanınca terminale sadece şunu yaz:
 
          arac
+
+     Program sana önce HANGİ KABLONUN NEREYE TAKILACAĞINI adım adım gösterir, sonra motor, enkoder ve
+     LiDAR testlerini yapar, en sonda robotu duvar takibine çıkarır. Sorun olursa:  arac acil
 
      (Tekerlekleri havaya alıp elini güç şalterine koy; program sana her adımda ne yapacağını söyler.)
 MSG
