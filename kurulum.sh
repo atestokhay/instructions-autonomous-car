@@ -16,7 +16,7 @@ DENEME=0; [ "${1:-}" = "--deneme" ] && DENEME=1
 LOG="$HOME/kurulum_log.txt"
 # Yazılım ayrı depoda; sabit (değişmeyen) sürüme kilitli, böylece herkeste aynı kod çalışır.
 YAZILIM_URL="https://github.com/atestokhay/autonomous-car.git"
-YAZILIM_SURUM="902adfca2cb1c718c0ec5dde1b8a89cb8da73530"
+YAZILIM_SURUM="f4282eb64c1b01e8a6e015c7a53e21c5a8f6c496"   # 3S LiPo + TB6612FNG + N20 6 V
 YAZILIM_DIR="$HOME/arac"
 SOFT="$YAZILIM_DIR/software"
 WS="$HOME/ros2_ws"
@@ -66,11 +66,27 @@ tamam "Sistem güncel"
 adim 3/8 "Temel paketler ve robot yazılımı kuruluyor"
 calistir "python/gpio/seri paketleri" sudo DEBIAN_FRONTEND=noninteractive apt-get -y install \
   git curl tmux software-properties-common python3-pip python3-yaml python3-serial python3-numpy \
-  python3-matplotlib python3-lgpio gpiod || dur "Temel paketler kurulamadı"
+  python3-matplotlib python3-lgpio gpiod i2c-tools || dur "Temel paketler kurulamadı"
 calistir "vcgencmd (isteğe bağlı)" sudo DEBIAN_FRONTEND=noninteractive apt-get -y install libraspberrypi-bin \
   || uyari "vcgencmd kurulamadı (güç kontrolü komutu çalışmayabilir, kurulum devam ediyor)"
 if [ -d "$YAZILIM_DIR/.git" ]; then
   tamam "Robot yazılımı zaten indirilmiş"
+  ESKI_SURUM="$(git -C "$YAZILIM_DIR" rev-parse HEAD 2>/dev/null)"
+  if [ "$ESKI_SURUM" != "$YAZILIM_SURUM" ]; then
+    # Yeni sürüm: önceki kurulumdaki ayarlar eski donanıma (4S/L298N/JSumo) göreydi, yedeklenip sıfırlanır.
+    calistir "yeni sürüm indiriliyor" git -C "$YAZILIM_DIR" fetch -q origin || dur "Yeni sürüm indirilemedi (internet/GitHub?)"
+    YEDEK="$HOME/arac_yedek_$(date +%Y%m%d_%H%M%S)"
+    if [ "$DENEME" != 1 ]; then
+      mkdir -p "$YEDEK"
+      for f in tuned.yaml robot_cal.yaml; do
+        [ -f "$SOFT/config/$f" ] && mv "$SOFT/config/$f" "$YEDEK/"
+      done
+      [ -f "$HOME/.arac_ilerleme.json" ] && mv "$HOME/.arac_ilerleme.json" "$YEDEK/"
+      git -C "$YAZILIM_DIR" diff > "$YEDEK/yerel_degisiklikler.diff" 2>/dev/null
+      git -C "$YAZILIM_DIR" checkout -q -- . >> "$LOG" 2>&1
+    fi
+    uyari "Donanım değişti (3S + TB6612 + N20). Eski ayarlar ve 'arac' ilerlemesi $YEDEK klasörüne taşındı; 'arac' baştan başlayacak."
+  fi
 else
   calistir "robot yazılımı indiriliyor" git clone "$YAZILIM_URL" "$YAZILIM_DIR" || dur "Robot yazılımı indirilemedi (internet/GitHub?)"
 fi
@@ -81,6 +97,9 @@ tamam "Temel paketler ve robot yazılımı tamam"
 adim 4/8 "GPIO ve LiDAR portu izinleri ayarlanıyor"
 calistir "gpio grubu" sudo groupadd -f gpio || dur "Grup oluşturulamadı"
 calistir "kullanıcıyı gruplara ekle" sudo usermod -aG dialout,gpio "$USER" || dur "Kullanıcı gruba eklenemedi"
+if getent group i2c >/dev/null; then
+  calistir "I2C izni (BNO055)" sudo usermod -aG i2c "$USER" || uyari "i2c grubuna eklenemedi"
+fi
 if [ "$DENEME" != 1 ]; then
   echo 'SUBSYSTEM=="gpio", KERNEL=="gpiochip*", GROUP="gpio", MODE="0660"' | sudo tee /etc/udev/rules.d/99-gpio.rules >/dev/null
   sudo udevadm control --reload-rules >> "$LOG" 2>&1; sudo udevadm trigger >> "$LOG" 2>&1
