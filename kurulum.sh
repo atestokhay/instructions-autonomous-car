@@ -16,7 +16,7 @@ DENEME=0; [ "${1:-}" = "--deneme" ] && DENEME=1
 LOG="$HOME/kurulum_log.txt"
 # Yazılım ayrı depoda; sabit (değişmeyen) sürüme kilitli, böylece herkeste aynı kod çalışır.
 YAZILIM_URL="https://github.com/atestokhay/autonomous-car.git"
-YAZILIM_SURUM="f4282eb64c1b01e8a6e015c7a53e21c5a8f6c496"   # 3S LiPo + TB6612FNG + N20 6 V
+YAZILIM_SURUM="727ff041c8e0c2d1762820da030103c8ab5fc7f1"   # 3S LiPo + TB6612FNG + N20 6 V
 YAZILIM_DIR="$HOME/arac"
 SOFT="$YAZILIM_DIR/software"
 WS="$HOME/ros2_ws"
