@@ -48,6 +48,10 @@ Program seni sırayla götürür:
 2. **Testler:** motor, enkoder (tekerleği 10 tur çevirip tur başına sayımı ölçer), hız ayarı, LiDAR (yönleri kendisi düzeltir)
 3. **Ölçüm** ve **duvar takibi** (önce simülasyon, sonra robot)
 
+**Robotu önceden komple taktıysan** ilk soruya **evet** de: program bazı kabloları geçici olarak
+söktürür, regülatörleri ölçtürüp ayarlatır, sonra geri taktırır. Söylediği kabloları gerçekten sök;
+ayarlanmamış regülatör LiDAR'ı ve motorları yakabilir.
+
 Kapatsan bile kaldığın adımdan devam eder. Robot sadece güvenlik sorusuna **evet** dediğinde hareket eder.
 
 | Komut | Ne yapar |
