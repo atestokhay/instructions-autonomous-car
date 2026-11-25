@@ -3,7 +3,7 @@
 Raspberry Pi 5 + LiDAR otonom araç. Kablolama ve robotu çalıştırmaya kadar her şeyi
 adım adım gösteriyor.  Yapacağın sadece iki şey var.
 
-**Donanım:** 3S LiPo (11,1 V), TB6612FNG motor sürücü, 2 × N20 6 V enkoderli motor,
+**Donanım:** 3S LiPo (11,1 V), TB6612FNG motor sürücü, 2 × JGA12-N20B 6 V 300 RPM enkoderli motor,
 RPLIDAR S3, BNO055 IMU. Kablolama şeması:
 [autonomous-car/hardware/wiring](https://github.com/atestokhay/autonomous-car/tree/main/hardware/wiring)
 
