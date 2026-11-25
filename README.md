@@ -1,67 +1,58 @@
-# Otonom Araç — Kurulumu
+# Otonom Araç — Kurulum
 
-Raspberry Pi 5 + LiDAR otonom araç. Kablolama ve robotu çalıştırmaya kadar her şeyi
-adım adım gösteriyor.  Yapacağın sadece iki şey var.
+Raspberry Pi 5 + LiDAR otonom araç. Yapacağın sadece üç şey var: **kabloları şemaya göre tak**,
+**kurulumu çalıştır**, **`arac` yaz**.
 
-**Donanım:** 3S LiPo (11,1 V), TB6612FNG motor sürücü, 2 × JGA12-N20B 6 V 300 RPM enkoderli motor,
-RPLIDAR S3, BNO055 IMU. Kablolama şeması:
-[autonomous-car/hardware/wiring](https://github.com/atestokhay/autonomous-car/tree/main/hardware/wiring)
+## ▶ 1) Kablolama
 
-> **Daha önce kurduysan** (eski 4S/L298N sürümü), yukarıdaki komut yerine şunu çalıştır:
->
-> ```bash
-> cd ~/instructions-autonomous-car && git pull && bash kurulum.sh
-> ```
->
-> Kurulum yeni sürüme geçer; eski ayarlar ve `arac` ilerlemesi `~/arac_yedek_...` klasörüne
-> taşınır, `arac` kablolamadan **baştan** başlar (pinler değişti).
+Şemadaki her bağlantıyı yap:
+[**schematic.png**](https://github.com/atestokhay/autonomous-car/blob/main/hardware/wiring/schematic.png)
 
-## ▶ 1) Kurulum
+**Donanım:** 3S LiPo (11,1 V) · 10 A sigorta · ana şalter · XL4015 5 A buck (motor, **6,0 V**) ·
+USB-C DC-DC (Pi, 5,1 V) · MP1584EN (LiDAR, **5,0 V**) · TB6612FNG · 2 × JGA12-N20B 6 V 300 RPM ·
+RPLIDAR S3 · BNO055 · Raspberry Pi 5.
 
-1. SD karta **Ubuntu Server 24.04 LTS (64-bit)** yaz, (SD kartta varsa aynen devam) (Raspberry Pi Imager; kullanıcı adı, parola, Wi-Fi ve **SSH**'ı ayarlardan aç).
-2. Pi'yi **kendi şarj adaptöründen** çalıştır, internete bağla, bilgisayardan SSH ile bağlan.
+Bataryayı ilk kez takmadan önce regülatörlerin çıkışını **yük bağlı değilken** multimetreyle ayarla:
+XL4015 → 6,0 V, MP1584EN → 5,0 V. (Yeni XL4015 ayarsızken girişteki 12 V'u aynen çıkışa verir.)
+
+## ▶ 2) Kurulum
+
+1. SD karta **Ubuntu Server 24.04 LTS (64-bit)** yaz (Raspberry Pi Imager; kullanıcı adı, parola, Wi-Fi ve **SSH**'ı ayarlardan aç).
+2. Pi'yi aç, internete bağla, bilgisayardan SSH ile bağlan.
 3. Pi'nin terminaline şu tek satırı yapıştır ve Enter'a bas:
 
 ```bash
 sudo apt-get install -y git && git clone https://github.com/atestokhay/instructions-autonomous-car.git && bash instructions-autonomous-car/kurulum.sh
 ```
 
-20–40 dakika sürer; pencereyi ve interneti kapatma. Bitince `KURULUM TAMAMLANDI ✓` yazar. Sonra:
+20–40 dakika sürer. Bitince `KURULUM TAMAMLANDI ✓` yazar. Sonra:
 
 ```bash
 sudo reboot
 ```
 
+**Daha önce kurduysan** yukarıdaki komut yerine:
+
+```bash
+cd ~/instructions-autonomous-car && git pull && bash kurulum.sh
+```
+
 Yarım kalırsa aynı komutu tekrar çalıştır. Hata olursa `~/kurulum_log.txt` dosyasını öğretmene gönder.
 
-## ▶ 2) Robotu hazırla
+## ▶ 3) Çalıştır
 
-Pi yeniden açılınca terminale sadece şunu yaz:
+Robotu **yere** koy: etrafında ~1 m boş yer, **sağ tarafında bir duvar** olsun. Terminale:
 
 ```bash
 arac
 ```
 
-Program seni sırayla götürür:
-1. **Kablolama:** hangi kablo nereye (pin tablosu ekranda), regülatörlerin ayarı: motor buck **6,0 V**, Pi DC-DC 5 V,
-   MP1584EN **5,00 V** (multimetreyle ölçtüğün değerleri kontrol eder)
-2. **Testler:** motor, enkoder (tekerleği 10 tur çevirip tur başına sayımı ölçer), hız ayarı, LiDAR (yönleri kendisi düzeltir)
-3. **Ölçüm** ve **duvar takibi** (önce simülasyon, sonra robot)
-
-**Robotu önceden komple taktıysan** ilk soruya **evet** de: program bazı kabloları geçici olarak
-söktürür, regülatörleri ölçtürüp ayarlatır, sonra geri taktırır. Söylediği kabloları gerçekten sök;
-ayarlanmamış regülatör LiDAR'ı ve motorları yakabilir.
-
-Kapatsan bile kaldığın adımdan devam eder. Robot sadece güvenlik sorusuna **evet** dediğinde hareket eder.
+Program soru sormaz. İlk seferde birkaç dakika kendini ölçer (motor ve enkoder yönleri, hız,
+PID ayarı, LiDAR'ın önü; robot bu sırada yerinde döner ve kısa süre ileri gider), sonra sağdaki duvarı
+**tam hızla** takip etmeye başlar. Durdurmak için `Ctrl+C`. Sonraki seferlerde doğrudan duvar takibi başlar.
 
 | Komut | Ne yapar |
 |---|---|
-| `arac` | Rehberli kurulum ve çalıştırma |
-| `arac kablo` | Pin tablosunu tekrar göster |
-| `arac acil` | Acil durum ve "çalışmıyor" kontrol listesi |
-
-## Güvenlik (kısaca)
-Motor testlerinde **tekerlekler havada**, elin **güç şalterinde**. Duman, yanık kokusu, ısınma → şalteri kapat.
-TB6612'nin **VCC'si 3,3 V** (Pi pin 1), **VM'si 6 V** (motor buck): ikisini asla karıştırma.
-3S batarya **10,5 V** altına inince şarj et.
-Yazılım simülasyonda doğrulandı; gerçek robotta ilk kez sizinle denenecek, takıldığın yerde öğretmenine yaz.
+| `arac` | Ölç (gerekirse) ve duvar takibine çık |
+| `arac sifirla` | Ölçümleri sil; sonraki `arac` baştan ölçer (kablo/motor değiştiyse) |
+| `arac acil` | "Çalışmıyor" kontrol listesi |

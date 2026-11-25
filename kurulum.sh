@@ -4,7 +4,7 @@
 #
 #    sudo apt-get install -y git && git clone https://github.com/atestokhay/instructions-autonomous-car.git && bash instructions-autonomous-car/kurulum.sh
 #
-#  Kurulum bitince:   sudo reboot      sonra terminale sadece şunu yaz:   arac   (kablolamayı da o gösterir)
+#  Kurulum bitince:   sudo reboot      sonra terminale sadece şunu yaz:   arac   (robot kendisi ölçer ve çalışır)
 # =====================================================================
 # Otonom araç: tek komutla kurulum (Raspberry Pi 5, Ubuntu 24.04).
 #   bash kurulum.sh            -> kurulumu yapar (yaklaşık 20-40 dk, internet gerekir)
@@ -16,7 +16,7 @@ DENEME=0; [ "${1:-}" = "--deneme" ] && DENEME=1
 LOG="$HOME/kurulum_log.txt"
 # Yazılım ayrı depoda; sabit (değişmeyen) sürüme kilitli, böylece herkeste aynı kod çalışır.
 YAZILIM_URL="https://github.com/atestokhay/autonomous-car.git"
-YAZILIM_SURUM="78f41db63bfb06cbf5047d7537dadf13f2c7e0ec"   # 3S LiPo + TB6612FNG + N20 6 V
+YAZILIM_SURUM="16865a8653028634cb68145a2cb65f19d923a3c2"   # 3S LiPo + TB6612FNG + N20 6 V
 YAZILIM_DIR="$HOME/arac"
 SOFT="$YAZILIM_DIR/software"
 WS="$HOME/ros2_ws"
@@ -78,14 +78,14 @@ if [ -d "$YAZILIM_DIR/.git" ]; then
     YEDEK="$HOME/arac_yedek_$(date +%Y%m%d_%H%M%S)"
     if [ "$DENEME" != 1 ]; then
       mkdir -p "$YEDEK"
-      for f in tuned.yaml robot_cal.yaml; do
+      for f in tuned.yaml robot_cal.yaml oto.yaml; do
         [ -f "$SOFT/config/$f" ] && mv "$SOFT/config/$f" "$YEDEK/"
       done
       [ -f "$HOME/.arac_ilerleme.json" ] && mv "$HOME/.arac_ilerleme.json" "$YEDEK/"
       git -C "$YAZILIM_DIR" diff > "$YEDEK/yerel_degisiklikler.diff" 2>/dev/null
       git -C "$YAZILIM_DIR" checkout -q -- . >> "$LOG" 2>&1
     fi
-    uyari "Donanım değişti (3S + TB6612 + N20). Eski ayarlar ve 'arac' ilerlemesi $YEDEK klasörüne taşındı; 'arac' baştan başlayacak."
+    uyari "Yeni sürüm. Eski ölçümler $YEDEK klasörüne taşındı; 'arac' ilk çalıştırmada her şeyi yeniden ölçecek."
   fi
 else
   calistir "robot yazılımı indiriliyor" git clone "$YAZILIM_URL" "$YAZILIM_DIR" || dur "Robot yazılımı indirilemedi (internet/GitHub?)"
@@ -181,9 +181,8 @@ SIRADAKİ ADIMLAR:
 
          arac
 
-     Program sana önce HANGİ KABLONUN NEREYE TAKILACAĞINI adım adım gösterir, sonra motor, enkoder ve
-     LiDAR testlerini yapar, en sonda robotu duvar takibine çıkarır. Sorun olursa:  arac acil
-
-     (Tekerlekleri havaya alıp elini güç şalterine koy; program sana her adımda ne yapacağını söyler.)
+     Robotu YERE koy (etrafında ~1 m boş yer, SAĞ tarafında bir duvar). Program soru sormaz:
+     ilk seferde motorları, enkoderleri, hızı ve LiDAR yönünü kendisi ölçer (birkaç dakika),
+     sonra duvar takibine tam hızla başlar. Durdurmak: Ctrl+C.  Sonraki seferlerde doğrudan başlar.
 MSG
 echo "Kurulum bitti $(date)" >> "$LOG"
